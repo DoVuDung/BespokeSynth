@@ -99,7 +99,7 @@ public:
 
    void SetModuleFactory(ModuleFactory* factory) { mSpawnLists.SetModuleFactory(factory); }
    void ListLayouts();
-   void RescanVSTs() { mVstRescanCountdown = 5; }
+   void RescanVSTs();
    
    bool IsSaveable() override { return false; }
    
@@ -142,6 +142,9 @@ private:
    int mVstRescanCountdown;
    
    bool mLeftCornerHovered;
+
+   class PluginListWindow;
+   std::unique_ptr<PluginListWindow> mPluginListWindow;
 };
 
 extern TitleBar* TheTitleBar;

@@ -36,6 +36,7 @@
 #include "UIControlMacros.h"
 
 #include "juce_audio_devices/juce_audio_devices.h"
+#include "juce_gui_basics/juce_gui_basics.h"
 
 TitleBar* TheTitleBar = nullptr;
 
@@ -147,6 +148,45 @@ void SpawnList::SetPositionRelativeTo(SpawnList* list)
    mSpawnList->SetPosition(x + w + 5, y);
 }
 
+class TitleBar::PluginListWindow : public juce::DocumentWindow
+{
+public:
+   PluginListWindow(juce::AudioPluginFormatManager& pluginFormatManager)
+      : DocumentWindow("Available Plugins",
+         juce::LookAndFeel::getDefaultLookAndFeel().findColour(ResizableWindow::backgroundColourId),
+         DocumentWindow::minimiseButton | DocumentWindow::closeButton)
+   {
+      auto deadMansPedalFile(juce::File(ofToDataPath("vst/deadmanspedal.txt")));
+
+      setContentOwned(new juce::PluginListComponent(pluginFormatManager,
+         VSTPlugin::sPluginList,
+         deadMansPedalFile,
+         nullptr, true), true);
+
+      setResizable(true, false);
+      setResizeLimits(300, 400, 800, 1500);
+      setTopLeftPosition(60, 60);
+
+      //restoreWindowStateFromString(getAppProperties().getUserSettings()->getValue("listWindowPos"));
+      setVisible(true);
+   }
+
+   ~PluginListWindow() override
+   {
+      //getAppProperties().getUserSettings()->setValue("listWindowPos", getWindowStateAsString());
+      clearContentComponent();
+   }
+
+   void closeButtonPressed() override
+   {
+      //owner.pluginListWindow = nullptr;
+   }
+
+private:
+
+   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginListWindow)
+};
+
 TitleBar::TitleBar()
 : mSaveLayoutButton(nullptr)
 , mResetLayoutButton(nullptr)
@@ -203,13 +243,25 @@ TitleBar::~TitleBar()
    TheTitleBar = nullptr;
 }
 
+void TitleBar::RescanVSTs()
+{
+   //mVstRescanCountdown = 5;
+   if (mPluginListWindow == nullptr)
+      mPluginListWindow.reset(new PluginListWindow(VSTPlugin::sFormatManager));
+
+   mPluginListWindow->toFront(true);
+}
+
 void TitleBar::Poll()
 {
    if (mVstRescanCountdown > 0)
    {
       --mVstRescanCountdown;
       if (mVstRescanCountdown == 0)
-         mSpawnLists.SetUpVstDropdown(true);
+      {
+         //mSpawnLists.SetUpVstDropdown(true);
+
+      }
    }
 }
 

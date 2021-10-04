@@ -93,6 +93,8 @@ public:
    std::vector<IUIControl*> ControlsToIgnoreInSaveState() const override;
    
    static bool sIsRescanningVsts;
+   static juce::AudioPluginFormatManager sFormatManager;
+   static juce::KnownPluginList sPluginList;
    
 private:
    //IDrawableModule
