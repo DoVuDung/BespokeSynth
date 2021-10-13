@@ -86,7 +86,7 @@ namespace VSTLookup
          VSTPlugin::sPluginList.createXml()->writeTo(juce::File(ofToDataPath("vst/found_vsts.xml")));
          VSTPlugin::sIsRescanningVsts = false;
       }
-      else
+      else if (VSTPlugin::sPluginList.getNumTypes() == 0)
       {
          auto file = juce::File(ofToDataPath("vst/found_vsts.xml"));
          if (file.existsAsFile())

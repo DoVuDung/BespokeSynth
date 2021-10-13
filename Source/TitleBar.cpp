@@ -45,7 +45,7 @@ bool TitleBar::sShowInitialHelpOverlay = true;
 
 namespace
 {
-   const std::string kRescanPluginsLabel = "rescan VSTs...";
+   const std::string kRescanPluginsLabel = "manage VSTs...";
 }
 
 SpawnList::SpawnList(IDropdownListener* owner, SpawnListManager* listManager, int x, int y, std::string label)
@@ -309,7 +309,7 @@ void SpawnListManager::SetUpVstDropdown(bool rescan)
 {
    std::vector<std::string> vsts;
    VSTLookup::GetAvailableVSTs(vsts, rescan);
-   vsts.push_back(kRescanPluginsLabel);
+   vsts.insert(vsts.begin(), kRescanPluginsLabel);
    mVstPlugins.SetList(vsts, "vstplugin");
 }
 
@@ -549,6 +549,12 @@ void TitleBar::GetModuleDimensions(float& width, float& height)
 
 void TitleBar::CheckboxUpdated(Checkbox* checkbox)
 {
+}
+
+void TitleBar::DropdownClicked(DropdownList* list)
+{
+   if (list == mSpawnLists.mVstPlugins.GetList())
+      mSpawnLists.SetUpVstDropdown(false);
 }
 
 void TitleBar::DropdownUpdated(DropdownList* list, int oldVal)

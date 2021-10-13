@@ -104,6 +104,7 @@ public:
    bool IsSaveable() override { return false; }
    
    void CheckboxUpdated(Checkbox* checkbox) override;
+   void DropdownClicked(DropdownList* list) override;
    void DropdownUpdated(DropdownList* list, int oldVal) override;
    void ButtonClicked(ClickButton* button) override;
    void FloatSliderUpdated(FloatSlider* slider, float oldVal) override {}
